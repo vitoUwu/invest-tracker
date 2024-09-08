@@ -1,32 +1,14 @@
 <script lang="ts" setup>
-import type {
-  Investment,
-  InvestmentRegistry,
-  InvestmentWithRegistry,
-} from "~/types";
+import type { InvestmentWithRegistry } from "~/types";
 const toast = useToast();
 
 definePageMeta({
   path: "/investimentos",
 });
 
-const { data, status } = await useLazyAsyncData<
-  (Investment & { registries: InvestmentRegistry[] })[]
->(
-  "investiments",
-  async () => {
-    const [investiments, registries] = await Promise.all([
-      $fetch("/api/investments") as Promise<Investment[]>,
-      $fetch("/api/investments/registries") as Promise<InvestmentRegistry[]>,
-    ]);
-
-    return investiments.map((investiment) => ({
-      ...investiment,
-      registries: registries.filter(
-        (registry) => registry.investmentId === investiment._id
-      ),
-    }));
-  },
+const { data, status } = await useLazyAsyncData<InvestmentWithRegistry[]>(
+  "investments",
+  () => $fetch("/api/investments"),
   {
     default: () => [],
   }

@@ -20,13 +20,19 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    const cache = useStorage("cache");
+    await cache.removeItem(`nitro:handlers:getInvestment:${id}.json`);
+    await cache.removeItem("nitro:handlers:getInvestments:default.json");
     return await InvestmentRegistrySchema.create({
-      investmentId: event.context.params?.id,
+      investmentId: id,
       amount: data.data.amount * 100,
       type: data.data.type,
       createdAt: new Date(data.data.boughtAt),
     });
   } catch (error) {
-    return error;
+    console.error({ error, event });
+    return new Response("An error has occured while creating investment", {
+      status: 500,
+    });
   }
 });

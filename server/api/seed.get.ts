@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   await InvestmentSchema.deleteMany({});
   await InvestmentRegistrySchema.deleteMany({});
 
-  const investiments = [
+  const investments = [
     {
       name: "Ação da Empresa XYZ",
       registries: [
@@ -102,17 +102,18 @@ export default defineEventHandler(async (event) => {
 
   try {
     await InvestmentSchema.insertMany(
-      investiments.map(({ name }) => ({ name }))
+      investments.map(({ name }) => ({ name }))
     );
   } catch (error) {
-    return new Response("An error has occured while seeding investiments", {
+    console.error({ error });
+    return new Response("An error has occured while seeding investments", {
       status: 500,
     });
   }
 
   const investimentDocs = await InvestmentSchema.find();
   for (const doc of investimentDocs) {
-    const registries = investiments.find(
+    const registries = investments.find(
       (investiment) => investiment.name === doc.name
     )?.registries;
 

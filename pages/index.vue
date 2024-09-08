@@ -3,25 +3,9 @@ import type { Investment, InvestmentRegistry } from "~/types";
 
 const { data, status } = await useLazyAsyncData<
   (Investment & { registries: InvestmentRegistry[] })[]
->(
-  "investiments",
-  async () => {
-    const [investiments, registries] = await Promise.all([
-      $fetch("/api/investments") as Promise<Investment[]>,
-      $fetch("/api/investments/registries") as Promise<InvestmentRegistry[]>,
-    ]);
-
-    return investiments.map((investiment) => ({
-      ...investiment,
-      registries: registries.filter(
-        (registry) => registry.investmentId === investiment._id
-      ),
-    }));
-  },
-  {
-    default: () => [],
-  }
-);
+>("investments", () => $fetch("/api/investments"), {
+  default: () => [],
+});
 
 const isLoading = computed(() => status.value === "pending");
 

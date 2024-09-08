@@ -13,10 +13,17 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    const cache = useStorage("cache");
+    await cache.removeItem(`nitro:handlers:getInvestment:${id}.json`);
+    await cache.removeItem("nitro:handlers:getInvestments:default.json");
+
     await InvestmentSchema.deleteOne({ _id: id });
     await InvestmentRegistrySchema.deleteMany({ investmentId: id });
     return new Response(null, { status: 204 });
   } catch (error) {
-    return error;
+    console.error({ error, event });
+    return new Response("An error has occured while deleting investment", {
+      status: 500,
+    });
   }
 });

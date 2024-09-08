@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import type { BreadcrumbLink } from "#ui/types/breadcrumb";
-import type { InvestmentRegistry } from "~/types";
+import type { InvestmentRegistry, InvestmentWithRegistry } from "~/types";
 const toast = useToast();
 
 definePageMeta({
@@ -10,22 +9,16 @@ definePageMeta({
 const { params } = useRoute();
 const investmentId = params.id as string;
 
-const breadcrumb: BreadcrumbLink[] = [
+const { data: _data, status } = await useLazyAsyncData<InvestmentWithRegistry>(
+  investmentId,
+  async () => $fetch(`/api/investments/${investmentId}`, { method: "GET" }),
   {
-    label: "Investimentos",
-    to: "/investimentos",
-  },
-  {
-    label: "Fundo de Investimento ABC",
-  },
-];
-
-const { data: _data, status } = await useLazyAsyncData<InvestmentRegistry[]>(
-  "investiments",
-  // @ts-ignore - TODO: fix this
-  () => $fetch(`/api/investments/${investmentId}/registry`, { method: "GET" }),
-  {
-    default: () => [],
+    default: () =>
+      ({
+        _id: "",
+        name: "",
+        registries: [],
+      } as unknown as InvestmentWithRegistry),
   }
 );
 
@@ -36,12 +29,14 @@ const isLoading = computed(() => {
 });
 
 const total = computed(() => {
-  return data.value.reduce((acc, curr) => acc + curr.amount, 0) / 100;
+  return (
+    data.value.registries.reduce((acc, curr) => acc + curr.amount, 0) / 100
+  );
 });
 
 const returnAmount = computed(() => {
   return (
-    data.value
+    data.value.registries
       .filter((item) => item.type === "income")
       .reduce((acc, curr) => {
         return acc + curr.amount;
@@ -56,7 +51,10 @@ const returnPercentage = computed(() => {
 });
 
 function handleCreate(registry: InvestmentRegistry) {
-  data.value.push(registry);
+  const unrefData = unref(data.value);
+  unrefData.registries.push(registry);
+  data.value = unrefData;
+
   toast.add({
     title: "Novo registro adicionado",
     id: registry._id as unknown as string,
@@ -66,9 +64,10 @@ function handleCreate(registry: InvestmentRegistry) {
 
 function handleRemove(ids: string[]) {
   const unrefData = unref(data.value);
-  data.value = unrefData.filter(
+  unrefData.registries = unrefData.registries.filter(
     (item) => !ids.includes(item._id as unknown as string)
   );
+  data.value = unrefData;
 }
 </script>
 
@@ -82,7 +81,19 @@ function handleRemove(ids: string[]) {
       color="white"
       class="w-fit"
     />
-    <UBreadcrumb :links="breadcrumb" />
+    <USkeleton v-if="isLoading" class="h-6 w-full" />
+    <UBreadcrumb
+      v-else
+      :links="[
+        {
+          label: 'Investimentos',
+          to: '/investimentos',
+        },
+        {
+          label: data.name,
+        },
+      ]"
+    />
     <div class="grid md:grid-cols-3 gap-6">
       <UCard>
         <template #header>
@@ -133,8 +144,8 @@ function handleRemove(ids: string[]) {
     <UDivider class="my-6" />
     <div class="grid lg:grid-cols-3 gap-6">
       <CardsInvestmentRegistries
-        :key="`${status}-${data.length}`"
-        :data="data"
+        :key="`${status}-${data.registries.length}`"
+        :data="data.registries"
         :isLoading="isLoading"
         :investmentId="investmentId"
         @create="handleCreate"

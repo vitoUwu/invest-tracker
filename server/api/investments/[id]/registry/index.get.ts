@@ -6,6 +6,9 @@ export default defineEventHandler(async (event) => {
       investmentId: event.context.params?.id,
     });
   } catch (error) {
-    return error;
+    console.error({ error, event });
+    return new Response("An error has occured while fetching investment", {
+      status: 500,
+    });
   }
 });

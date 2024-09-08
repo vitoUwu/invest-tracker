@@ -21,8 +21,15 @@ export default defineEventHandler(async (event) => {
       createdAt: new Date(),
     });
 
+    await useStorage("cache").removeItem(
+      "nitro:handlers:getInvestments:default.json"
+    );
+
     return { _id: doc._id, name: doc.name, registries: [registry] };
   } catch (error) {
-    return error;
+    console.error({ error, event });
+    return new Response("An error has occured while creating investment", {
+      status: 500,
+    });
   }
 });
