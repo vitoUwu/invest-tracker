@@ -1,8 +1,8 @@
-import type { ObjectId } from "mongoose";
+import type { Types } from "mongoose";
 
 export interface InvestmentRegistry {
-  _id: ObjectId;
-  investmentId: ObjectId;
+  _id: Types.ObjectId;
+  investmentId: Types.ObjectId;
   amount: number;
   type: "contribution" | "income";
   createdAt: Date;
@@ -10,7 +10,7 @@ export interface InvestmentRegistry {
 }
 
 export interface Investment {
-  _id: ObjectId;
+  _id: Types.ObjectId;
   name: string;
 }
 

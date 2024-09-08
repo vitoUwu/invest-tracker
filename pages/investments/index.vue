@@ -112,9 +112,9 @@ const isModalOpen = ref(false);
         >
           <CardsInvestmentsEmptyState @create="handleCreate" />
         </li>
-        <li v-for="item in data" :key="asString(item._id)" class="contents">
+        <li v-for="item in data" :key="item._id.toString()" class="contents">
           <button
-            @click="navigateTo(`/investimentos/${asString(item._id)}`)"
+            @click="navigateTo(`/investimentos/${item._id.toString()}`)"
             class="contents"
           >
             <UCard
@@ -136,7 +136,7 @@ const isModalOpen = ref(false);
                         {
                           label: 'Remover',
                           icon: 'i-heroicons-trash-solid',
-                          click: () => handleRemove(asString(item._id)),
+                          click: () => handleRemove(item._id.toString()),
                         },
                       ],
                     ]"
