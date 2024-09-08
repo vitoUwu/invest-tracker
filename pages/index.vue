@@ -1,13 +1,16 @@
 <script lang="ts" setup>
 import type { Investment, InvestmentRegistry } from "~/types";
 
-const { data, status } = await useLazyAsyncData<
+const { data, status } = await useAsyncData<
   (Investment & { registries: InvestmentRegistry[] })[]
 >("investments", () => $fetch("/api/investments"), {
   default: () => [],
+  server: false,
 });
 
-const isLoading = computed(() => status.value === "pending");
+const isLoading = computed(() =>
+  process.server ? true : status.value === "pending"
+);
 
 const totalInvested = computed(() => {
   return (

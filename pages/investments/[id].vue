@@ -19,14 +19,15 @@ const { data: _data, status } = await useLazyAsyncData<InvestmentWithRegistry>(
         name: "",
         registries: [],
       } as unknown as InvestmentWithRegistry),
+    server: false,
   }
 );
 
 const data = ref(_data);
 
-const isLoading = computed(() => {
-  return status.value === "pending";
-});
+const isLoading = computed(() =>
+  process.server ? true : status.value === "pending"
+);
 
 const total = computed(() => {
   return (

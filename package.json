@@ -12,10 +12,14 @@
   "dependencies": {
     "@nuxt/ui": "^2.18.4",
     "@nuxtjs/tailwindcss": "^6.12.1",
+    "jsonwebtoken": "^9.0.2",
     "nuxt": "^3.13.0",
     "nuxt-mongoose": "^1.0.6",
     "vue": "latest",
     "vue-router": "latest",
     "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.6"
   }
 }

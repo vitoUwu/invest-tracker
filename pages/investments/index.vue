@@ -11,6 +11,7 @@ const { data, status } = await useLazyAsyncData<InvestmentWithRegistry[]>(
   () => $fetch("/api/investments"),
   {
     default: () => [],
+    server: false,
   }
 );
 

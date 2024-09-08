@@ -17,3 +17,9 @@ export interface Investment {
 export interface InvestmentWithRegistry extends Investment {
   registries: InvestmentRegistry[];
 }
+
+export interface User {
+  _id: Types.ObjectId;
+  email: string;
+  password: string;
+}
