@@ -112,7 +112,7 @@ function handleRemove() {
     v-model="isModalOpen"
     :investment-id="investmentId"
   />
-  <UCard class="lg:col-span-2">
+  <UCard class="lg:col-span-2 w-full">
     <template #header>
       <div class="flex justify-between items-center flex-wrap gap-3">
         <h1

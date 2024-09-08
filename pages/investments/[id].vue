@@ -72,7 +72,7 @@ function handleRemove(ids: string[]) {
 </script>
 
 <template>
-  <main class="flex flex-col p-3 gap-3">
+  <main class="flex flex-col p-3 gap-3 max-w-[100vw]">
     <UButton
       label="Voltar"
       icon="i-heroicons-arrow-left-16-solid"
@@ -142,7 +142,7 @@ function handleRemove(ids: string[]) {
       </UCard>
     </div>
     <UDivider class="my-6" />
-    <div class="grid lg:grid-cols-3 gap-6">
+    <div class="flex lg:grid lg:grid-cols-3 gap-6">
       <CardsInvestmentRegistries
         :key="`${status}-${data.registries.length}`"
         :data="data.registries"

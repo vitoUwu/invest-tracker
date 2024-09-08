@@ -105,7 +105,7 @@ const isModalOpen = ref(false);
       <template #fallback>
         <USkeleton class="h-48 w-full" />
       </template>
-      <ul class="grid grid-cols-3 gap-6 flex-wrap">
+      <ul class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 flex-wrap">
         <li
           v-if="!data.length"
           class="flex w-full justify-center items-center col-span-full pt-10 cursor-pointer"
