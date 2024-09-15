@@ -13,9 +13,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const cache = useStorage("cache");
-    await cache.removeItem(`nitro:handlers:getInvestment:${id}.json`);
-    await cache.removeItem("nitro:handlers:getInvestments:default.json");
+    await useStorage("cache").clear();
 
     await InvestmentSchema.deleteOne({ _id: id });
     await InvestmentRegistrySchema.deleteMany({ investmentId: id });
