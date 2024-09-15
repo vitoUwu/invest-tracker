@@ -73,7 +73,10 @@ function handleRemove(ids: string[]) {
 </script>
 
 <template>
-  <main class="flex flex-col p-3 gap-3 max-w-[100vw]">
+  <main
+    v-if="isLoading || !!data.name"
+    class="flex flex-col p-3 gap-3 max-w-[100vw]"
+  >
     <UButton
       label="Voltar"
       icon="i-heroicons-arrow-left-16-solid"
@@ -171,5 +174,16 @@ function handleRemove(ids: string[]) {
         />
       </UCard>
     </div>
+  </main>
+  <main v-else class="flex flex-col p-3 gap-3 max-w-[100vw] text-center">
+    <h2 class="text-3xl font-semibold">Investimento não encontrado</h2>
+    <UButton
+      @click="navigateTo('/investimentos')"
+      color="gray"
+      class="w-fit mx-auto"
+      icon="i-heroicons-arrow-left-16-solid"
+    >
+      Voltar
+    </UButton>
   </main>
 </template>
