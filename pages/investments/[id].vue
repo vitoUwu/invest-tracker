@@ -26,7 +26,7 @@ const { data: _data, status } = await useLazyAsyncData<InvestmentWithRegistry>(
 const data = ref(_data);
 
 const isLoading = computed(() =>
-  process.server ? true : status.value === "pending"
+  import.meta.server ? true : status.value === "pending"
 );
 
 const total = computed(() => {

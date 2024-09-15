@@ -9,7 +9,7 @@ const { data, status } = await useAsyncData<
 });
 
 const isLoading = computed(() =>
-  process.server ? true : status.value === "pending"
+  import.meta.server ? true : status.value === "pending"
 );
 
 const totalInvested = computed(() => {

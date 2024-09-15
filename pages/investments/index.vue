@@ -16,7 +16,7 @@ const { data, status } = await useLazyAsyncData<InvestmentWithRegistry[]>(
 );
 
 const isLoading = computed(() =>
-  process.server ? true : status.value === "pending"
+  import.meta.server ? true : status.value === "pending"
 );
 
 function handleRemove(id: string) {
