@@ -6,6 +6,7 @@ const { data, isLoading, investmentId } = defineProps<{
   data: InvestmentRegistry[];
   isLoading: boolean;
   investmentId: string;
+  investmentTotal: number;
 }>();
 
 const isModalOpen = ref(false);
@@ -110,7 +111,8 @@ function handleRemove() {
     @close="isModalOpen = false"
     @create="handleCreate"
     v-model="isModalOpen"
-    :investment-id="investmentId"
+    :investmentTotal="investmentTotal"
+    :investmentId="investmentId"
   />
   <UCard class="lg:col-span-2 w-full">
     <template #header>

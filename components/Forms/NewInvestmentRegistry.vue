@@ -1,47 +1,38 @@
 <script lang="ts" setup>
+import type { z } from "zod";
 import type { InvestmentRegistry } from "~/types";
 import registrySchema from "~/utils/forms/registry.schema";
 const toast = useToast();
 
-const { investmentId } = defineProps<{
+const { investmentId, investmentTotal } = defineProps<{
   investmentId: string;
+  investmentTotal: number;
 }>();
 
 const emit = defineEmits<{
   (e: "create", data: InvestmentRegistry): void;
 }>();
 
-const state = reactive({
+const state = reactive<z.infer<typeof registrySchema>>({
   amount: 0,
-  type: "contribution",
-  boughtAt: new Date().toISOString().split("T")[0],
+  calculateDifference: true,
+  isIncome: true,
+  boughtAt: "",
 });
 
 async function handleSubmit() {
-  if (state.amount && state.boughtAt && state.type) {
+  if (state.amount && state.boughtAt) {
     const data = {
-      amount: state.amount,
-      type: state.type,
+      amount: state.calculateDifference
+        ? state.amount - investmentTotal
+        : state.amount,
+      type: state.isIncome ? "income" : "contribution",
       boughtAt: state.boughtAt,
     };
 
     $fetch(`/api/investments/${investmentId}/registry`, {
       method: "POST",
       body: JSON.stringify(data),
-      onResponseError: () => {
-        toast.add({
-          title: "Ocorreu um erro ao salvar o registro",
-          icon: "i-heroicons-exclamation-triangle-16-solid",
-          color: "red",
-        });
-      },
-      onRequestError: () => {
-        toast.add({
-          title: "Ocorreu um erro ao salvar o registro",
-          icon: "i-heroicons-exclamation-triangle-16-solid",
-          color: "red",
-        });
-      },
       onResponse: async ({ response }) => {
         if (response.ok) {
           emit("create", response._data);
@@ -57,6 +48,16 @@ async function handleSubmit() {
     });
   }
 }
+
+onMounted(() => {
+  state.boughtAt = new Date()
+    .toLocaleString("pt-BR")
+    .split(",")[0]
+    .split("/")
+    .map((item) => item.padStart(2, "0"))
+    .reverse()
+    .join("-");
+});
 </script>
 
 <template>
@@ -80,15 +81,12 @@ async function handleSubmit() {
         </template>
       </UInput>
     </UFormGroup>
-    <UFormGroup label="Tipo" name="type" rules="required">
-      <URadioGroup
-        v-model="state.type"
-        :options="[
-          { label: 'Contribuição', value: 'contribution' },
-          { label: 'Receita', value: 'income' },
-        ]"
-      />
-    </UFormGroup>
+    <UCheckbox
+      v-model="state.calculateDifference"
+      label="Calcular Diferença"
+      name="calculateDifference"
+    />
+    <UCheckbox label="Rendimento" v-model="state.isIncome" name="isIncome" />
     <UFormGroup label="Data" name="boughtAt" rules="required" class="w-full">
       <UInput placeholder="Data" type="date" v-model="state.boughtAt" />
     </UFormGroup>

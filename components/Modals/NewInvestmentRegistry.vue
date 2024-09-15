@@ -6,6 +6,7 @@ defineEmits<{
   (e: "create", data: InvestmentRegistry): void;
 }>();
 defineProps<{
+  investmentTotal: number;
   investmentId: string;
 }>();
 </script>
@@ -25,7 +26,9 @@ defineProps<{
         </div>
       </template>
       <FormsNewInvestmentRegistry
-        :investment-id="investmentId"
+        :key="`${investmentId}-${investmentTotal}`"
+        :investmentTotal="investmentTotal"
+        :investmentId="investmentId"
         @create="$emit('create', $event)"
       />
     </UCard>

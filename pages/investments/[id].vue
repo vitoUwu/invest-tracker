@@ -145,10 +145,11 @@ function handleRemove(ids: string[]) {
     <UDivider class="my-6" />
     <div class="flex lg:grid lg:grid-cols-3 gap-6">
       <CardsInvestmentRegistries
-        :key="`${status}-${data.registries.length}`"
+        :key="`${status}-${data.registries.length}-${total}`"
         :data="data.registries"
         :isLoading="isLoading"
         :investmentId="investmentId"
+        :investmentTotal="total"
         @create="handleCreate"
         @remove="handleRemove"
       />
@@ -163,6 +164,8 @@ function handleRemove(ids: string[]) {
           </div>
         </template>
         <FormsNewInvestmentRegistry
+          :key="`${investmentId}-${total}`"
+          :investmentTotal="total"
           :investmentId="investmentId"
           @create="handleCreate"
         />

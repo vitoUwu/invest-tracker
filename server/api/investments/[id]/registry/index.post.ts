@@ -1,6 +1,12 @@
 import { mongo } from "mongoose";
+import { z } from "zod";
 import { InvestmentRegistrySchema } from "~/server/models/InvestmentRegistry.schema";
-import registrySchema from "~/utils/forms/registry.schema";
+
+const newRegistrySchema = z.object({
+  amount: z.number(),
+  type: z.enum(["contribution", "income"]),
+  boughtAt: z.string(),
+});
 
 export default defineEventHandler(async (event) => {
   const id = event.context.params?.id;
@@ -13,7 +19,7 @@ export default defineEventHandler(async (event) => {
     return new Response("Invalid investiment id", { status: 400 });
   }
 
-  const data = registrySchema.safeParse(await readBody(event));
+  const data = newRegistrySchema.safeParse(await readBody(event));
 
   if (!data.success) {
     return new Response("Invalid data", { status: 400 });
