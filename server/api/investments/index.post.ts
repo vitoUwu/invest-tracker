@@ -21,8 +21,6 @@ export default defineEventHandler(async (event) => {
       createdAt: new Date(),
     });
 
-    await useStorage("cache").clear();
-
     return { _id: doc._id, name: doc.name, registries: [registry] };
   } catch (error) {
     console.error({ error, event });

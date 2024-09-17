@@ -26,8 +26,6 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    await useStorage("cache").clear();
-
     return await InvestmentRegistrySchema.create({
       investmentId: id,
       amount: data.data.amount * 100,

@@ -24,8 +24,6 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    await useStorage("cache").clear();
-
     return await InvestmentRegistrySchema.deleteMany({
       _id: { $in: body.data.ids },
       investmentId: id,

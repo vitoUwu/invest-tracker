@@ -13,8 +13,6 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    await useStorage("cache").clear();
-
     await InvestmentSchema.deleteOne({ _id: id });
     await InvestmentRegistrySchema.deleteMany({ investmentId: id });
     return new Response(null, { status: 204 });
